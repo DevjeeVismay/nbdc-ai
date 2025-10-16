@@ -260,7 +260,9 @@ if page == "🏠 User Dashboard":
                             {explanation}
                             Please try again with a clearer image that matches the challenge requirements.
                             """)
-            
+                else:
+                    st.error("🚨 GOOGLE_API_KEY is not set. Please add it to your Streamlit Cloud secrets.")
+                    
             # Handle human review button separately
             if 'last_verification' in st.session_state:
                 verification = st.session_state['last_verification']
