@@ -111,23 +111,22 @@ def verify_image_with_gemini(image, task_description, api_key):
         image.save(img_byte_arr, format='PNG')
         img_byte_arr = img_byte_arr.getvalue()
 
+        # This is the new, generic prompt
         prompt = f"""
-        You are verifying an uploaded receipt for a gamified challenge app. 
-        The user needs to: {task_description}
+        You are an AI verifier for a gamified challenge app. Your task is to determine if an uploaded image successfully completes a specific challenge.
 
-        Specifically check if the receipt is from Trader Joe's and contains an item 
-        matching "Mango Smoothie" (case-insensitive, small variations acceptable).
+        The user's challenge is to: "{task_description}"
 
-        Please analyze the image and determine if it successfully completes the challenge.
+        Please analyze the image provided and verify if it matches the challenge description. Base your entire decision on the requirements mentioned in the challenge description only.
 
         Respond with ONLY:
         1. "VERIFIED" or "NOT VERIFIED"
-        2. A brief explanation (one sentence)
-        3. Confidence percentage (0-100)
+        2. A brief, one-sentence explanation for your decision.
+        3. A confidence percentage (0-100).
 
-        Format: VERIFIED|Explanation|95
+        Format your response exactly as: STATUS|Explanation|Confidence
+        Example: VERIFIED|The image clearly shows a cannoli from Mike's Pastry.|98
         """
-
 
         response = model.generate_content([prompt, Image.open(io.BytesIO(img_byte_arr))])
         return response.text.strip()
